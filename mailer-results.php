@@ -15,6 +15,7 @@
 	</head>
 	<body>
 <?php
+include 'constants.php';
 include $privateDirectory.'sqlConfig.php';
 
 $connection = new mysqli($servername, $username, $password, $database);
