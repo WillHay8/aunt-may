@@ -7,21 +7,26 @@ if($connection->connect_error){
 	die("connection failed: " . $connection->connect_error);
 }
 $email = $_REQUEST['email'];
-$sqlGetVideoClicks = "select videoClicks from emailsOpened where email=".$email;
-if($result = mysqli_query($connection, $sqGetVideoClicksl)){
+//echo $email;
+$sqlGetVideoClicks = "select videoClicks from emailsOpened where email='".$email."'";
+if($result = mysqli_query($connection, $sqlGetVideoClicks)){
 	if(mysqli_num_rows($result) > 0){
 		while($row=mysqli_fetch_array($result)){
 			$newVideoClicks = $row['videoClicks'] + 1;
 		}
-		$sqlUpdateVideoClicks = "update emailsOpened set videoClicks=".$newVideoClicks."where email=".$email;
+		$sqlUpdateVideoClicks = "update emailsOpened set videoClicks=".$newVideoClicks." where email='".$email."'";
 		if(mysqli_query($connection, $sqlUpdateVideoClicks)){
-			//update success
+			//echo "sql update success ".$sqlUpdateVideoClicks."<br/>";
+		}
+		else{
+			//echo "sql update fail: ".$sqlUpdateVideoClicks."<br/>";
 		}
 	}else{
-		//no results for that id
+		
+		//echo "no results for email=".$email."<br/>";
 	}
 }else{
-	//select query failed
+	//echo "select query failed: ".$sqlGetVideoClicks."<br/>";
 }
 
 //redirect to vimeo

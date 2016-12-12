@@ -99,7 +99,7 @@ include $privateDirectory.'sqlConfig.php';
 				
 				echo '</div></div>';		
 
-if(isset($_REQUEST['name'])):	
+if(isset($_REQUEST['email'])):	
 	$name = $_REQUEST['name'];
 	$email = $_REQUEST['email'];
 	//check if record exists
