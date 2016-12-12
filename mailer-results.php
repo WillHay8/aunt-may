@@ -3,9 +3,22 @@
 	<head>
 		<title>Aunt May Mailer Results</title>
 		<style>
-			#email-count-table, th, td{
-			border: 1px solid black;
-			border-collapse: collapse;
+			#wrapper {
+				width: 100%;
+				max-width: 800px;
+				margin: auto;
+				border: 1px solid black;
+			}
+			h1 {
+				text-align: center;
+			}
+			
+			#email-count-table {
+				margin: 2em auto;
+			}
+			#email-count-table, th, td {
+				border: 1px solid black;
+				border-collapse: collapse;
 			}
 			td, th {
 				text-align: left;
@@ -14,6 +27,8 @@
 		</style>
 	</head>
 	<body>
+	<div id="wrapper">
+	<h1>Aunt May Email Tracking Results</h1>
 <?php
 include 'constants.php';
 include $privateDirectory.'sqlConfig.php';
@@ -21,14 +36,6 @@ include $privateDirectory.'sqlConfig.php';
 $connection = new mysqli($servername, $username, $password, $database);
 if($connection->connect_error){
 	die("connection failed: " . $connection->connect_error);
-}
-//echo "connected successfully <br>";
-$sqlOpenDatabase = "use auntMayMailer";
-if($result = mysqli_query($connection, $sqlOpenDatabase)){
-	//echo "connected to auntMayMailer db<br>";
-}
-else {
-	echo "can't connect to db<br>";
 }
 $sql = "select * from emailsOpened";
 if($result = mysqli_query($connection, $sql)){
@@ -61,5 +68,6 @@ if($result = mysqli_query($connection, $sql)){
 }
 $connection->close();
 ?>
+</div>
 </body>
 </html>

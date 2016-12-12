@@ -7,20 +7,30 @@ include $privateDirectory.'sqlConfig.php';
 	<head>
 		<title>Generate Aunt May Email</title>
 		<style>
-		body {
-			width: 800px;
-			margin: auto;
-		}
-			#recipientContainer{
-				display: block;
+			#wrapper {
 				width: 100%;
 				max-width: 800px;
+				margin: auto;
+				border: 1px solid black;
+			}
+			h1 {
+				text-align: center;
+			}
+			
+			.explanation {
 				margin: 1em;
 			}
 			
 			#newRecipient, #existingRecipient {
 				display: table-cell;
-				width: 50%;
+				padding: 2.5%;
+			}
+			
+			#newRecipient {
+				width: 35%;
+			}
+			#existingRecipient {
+				width: 55%;
 			}
 			
 			tbody {
@@ -43,8 +53,9 @@ include $privateDirectory.'sqlConfig.php';
 			</style>
 	</head>
 	<body>
-		<h1>Generate Aunt May Pitch Email</h1>
-			<span>To generate html, you can:</span>
+		<div id="wrapper">
+			<h1>Generate Aunt May Pitch Email</h1>
+			<span class="explanation">To generate html, you can:</span>
 			<div id="recipientContainer">
 			<div id="newRecipient">
 				<span>input name and email</span>
@@ -120,8 +131,8 @@ if(isset($_REQUEST['name'])):
 			}
 		?>
 
-			<span>Copy and paste this html	into the email, see below for appearance</span><br/>
-			<strong><span>Recipient: <?=str_replace('%20',' ',$name)?> <?=$email?></span></strong>
+			<span class="explanation">Copy and paste this html	into the email, see below for appearance</span><br/>
+			<strong><span class="explanation">Recipient: <?=str_replace('%20',' ',$name)?> <?=$email?></span></strong>
 				<div id="email-html">
 					<?php echo htmlspecialchars($htmlTemplate) ?>
 				</div>
@@ -136,6 +147,7 @@ if(isset($_REQUEST['name'])):
 	}
 	
 endif; ?>
+	</div>
 	</body>
 </html>
 
