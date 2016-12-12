@@ -1,6 +1,6 @@
 <?php 
-include ('constants.php');
-include('sqlConfig.php');
+include 'constants.php';
+include $privateDirectory.'sqlConfig.php';
 ?>
 <!DOCTYPE html>
 <html>

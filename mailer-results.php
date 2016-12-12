@@ -15,8 +15,7 @@
 	</head>
 	<body>
 <?php
-logToFile('test log');
-include 'sqlConfig.php';
+include $privateDirectory.'sqlConfig.php';
 
 $connection = new mysqli($servername, $username, $password, $database);
 if($connection->connect_error){
