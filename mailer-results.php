@@ -1,12 +1,17 @@
-<?php
-function logToFile($message){
-	file_put_contents("mailer-results.log", $message .  PHP_EOL, FILE_APPEND);
-}?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Aunt May Mailer Results</title>
-		<link rel="stylesheet" type="text/css" href="style-results.css">
+		<style>
+			#email-count-table, th, td{
+			border: 1px solid black;
+			border-collapse: collapse;
+			}
+			td, th {
+				text-align: left;
+				padding: 0.2em;
+			}
+		</style>
 	</head>
 	<body>
 <?php
@@ -17,10 +22,10 @@ $connection = new mysqli($servername, $username, $password, $database);
 if($connection->connect_error){
 	die("connection failed: " . $connection->connect_error);
 }
-echo "connected successfully <br>";
+//echo "connected successfully <br>";
 $sqlOpenDatabase = "use auntMayMailer";
 if($result = mysqli_query($connection, $sqlOpenDatabase)){
-	echo "connected to auntMayMailer db<br>";
+	//echo "connected to auntMayMailer db<br>";
 }
 else {
 	echo "can't connect to db<br>";
@@ -35,12 +40,14 @@ if($result = mysqli_query($connection, $sql)){
 				<th>name</th>
 				<th>email</th>
 				<th>load count</th>
+				<th>video link clicks</th>
 			</tr>
 <?php		while($row=mysqli_fetch_array($result)){
 				echo "<tr>";
 				echo "<td>" . $row["name"] . "</td>";
 				echo "<td>" . $row["email"] . "</td>";
 				echo "<td>" . $row["loadCount"] . "</td>";
+				echo "<td>" . $row["videoClicks"] . "</td>";
 				echo "</tr>";
 			}
 		echo "</table>";

@@ -1,40 +1,114 @@
+<?php 
+include ('constants.php');
+include('sqlConfig.php');
+?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Generate Aunt May Email</title>
-		<link rel="stylesheet" type="text/css" href="style-results.css">
+		<style>
+		body {
+			width: 800px;
+			margin: auto;
+		}
+			#recipientContainer{
+				display: block;
+				width: 100%;
+				max-width: 800px;
+				margin: 1em;
+			}
+			
+			#newRecipient, #existingRecipient {
+				display: table-cell;
+				width: 50%;
+			}
+			
+			tbody {
+				height: 7em;
+				overflow: scroll;
+			}
+			
+			table, th, td {
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+			
+			th, td {
+				padding: 0.2em;
+			}
+			
+			#email-html {
+				padding: 2em;
+			}
+			</style>
 	</head>
 	<body>
 		<h1>Generate Aunt May Pitch Email</h1>
-			<p>To generate html to paste into email, input the name and email address of the person you want to email:</p>
-			<form action="generate-email-html.php">
-				Name: <input type="text" name="name"/><br/>
-				Email: <input type="text" name="email"/><br/>
-				<input type="submit" value="generate html">
-			</form>
+			<span>To generate html, you can:</span>
+			<div id="recipientContainer">
+			<div id="newRecipient">
+				<span>input name and email</span>
+				<form action="generate-email-html.php">
+					Name: <input type="text" name="name"/><br/>
+					Email: <input type="text" name="email"/><br/>
+					<input type="submit" value="generate html">
+				</form>
+			</div>
+			<div id="existingRecipient">
+			<?php 
+				$connection = new mysqli($servername, $username, $password, $database);
+				if($connection->connect_error){
+					die("connection failed: " . $connection->connect_error);
+				}
+				//echo 'connected successfully';
+				$sqlGetAllNames = "select * from emailsOpened";
+				
+				if($allNames = mysqli_query($connection, $sqlGetAllNames)){ ?>
+					<span>or select name and email</span>
+					<table>
+						<tr>
+							<th>select</th>
+							<th>name</th>
+							<th>email</th>
+						</tr>
+					<?php while($nameRow=mysqli_fetch_array($allNames)){
+						echo "<tr>
+							<td>
+							<form action='generate-email-html.php'>
+							<input type='hidden' name='name' value='".$nameRow["name"] . "'/>
+							<input type='hidden' name='email' value='".$nameRow["email"]."'/>
+							<input type='submit' value='select'/></form> </td>
+							<td>" . $nameRow["name"] . "</td>
+							<td>" . $nameRow["email"] . "</td>
+							</tr>";
+						}
+					echo '</table>';
+						
+				}else{ echo 'name database call failed';}
+				
+				echo '</div></div>';		
 
-<?php
-if(isset($_REQUEST['name'])):
-	
-	include 'sqlConfig.php';
-	$connection = new mysqli($servername, $username, $password, $database);
-	if($connection->connect_error){
-		die("connection failed: " . $connection->connect_error);
-	}
-	echo 'connected successfully';
+if(isset($_REQUEST['name'])):	
 	$name = $_REQUEST['name'];
 	$email = $_REQUEST['email'];
-	$sqlInsert = "insert into emailsOpened (name,email,loadCount) values ('".$name."','".$email."',". 0 .")";
-	if(mysqli_query($connection, $sqlInsert)){
-		echo 'inserted '.$email.' successfully';
+	//check if record exists
+	$sqlCheckIfEmailExists = "select id from emailsOpened where email='".$email."'";
+	if($existingIds = mysqli_query($connection, $sqlCheckIfEmailExists)){
+		if(mysqli_num_rows($existingIds) == 0){
+			//if not exists insert
+			$sqlInsert = "insert into emailsOpened (name,email,loadCount,videoClicks) values ('".$name."','".$email."',". 0 .",". 0 .")";
+			if(mysqli_query($connection, $sqlInsert)){
+				//echo 'inserted '.$email.' successfully';
+			}
+			else{
+				echo "insertion failed";
+			}
+		}
 	}
-	else{
-		echo 'insertion of '.$email.' failed <br/>';
-		echo $sqlInsert;
-	}
+
 	
 	$htmlTemplate = "";
-	$sqlSelectHtml = "select html from htmlTemplate where title='default html'";
+	$sqlSelectHtml = "select html from htmlTemplate where title='".$htmlTitle."'";
 	if($result = mysqli_query($connection, $sqlSelectHtml)){
 		if(mysqli_num_rows($result) > 0){
 			while($row=mysqli_fetch_array($result)){
@@ -46,7 +120,8 @@ if(isset($_REQUEST['name'])):
 			}
 		?>
 
-			<p>Copy and paste this html	into the email, see below for appearance</p>
+			<span>Copy and paste this html	into the email, see below for appearance</span><br/>
+			<strong><span>Recipient: <?=str_replace('%20',' ',$name)?> <?=$email?></span></strong>
 				<div id="email-html">
 					<?php echo htmlspecialchars($htmlTemplate) ?>
 				</div>
