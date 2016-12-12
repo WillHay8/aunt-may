@@ -30,4 +30,4 @@ if($result = mysqli_query($connection, $sqlGetVideoClicks)){
 }
 
 //redirect to vimeo
-header("Location: https://vimeo.com/192983875");
+header("Location: https://vimeo.com/195085317");
